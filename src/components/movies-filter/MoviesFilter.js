@@ -1,6 +1,6 @@
-import './AppFilter.css';
+import './MoviesFilter.css';
 
-const AppFilter = () => {
+const MoviesFilter = () => {
   return (
     <div className="btn-group">
       <button className="btn btn-dark" type="button">Barcha kinolar</button>
@@ -10,4 +10,4 @@ const AppFilter = () => {
   )
 }
 
-export default AppFilter
+export default MoviesFilter
