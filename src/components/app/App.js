@@ -8,9 +8,9 @@ import MoviesAddForm from '../movies-add-form/MoviesAddForm'
 const App = () => {
 
   const data = [
-    {name: 'Shawshank Redemption', viewers: 800, favourite:false},
-    {name: 'Gladiator', viewers: 700, favourite:false},
-    {name: 'Pirates of the Caribbean', viewers: 650, favourite:true},
+    {name: 'Shawshank Redemption', viewers: 800, favourite:false, id: 1},
+    {name: 'Gladiator', viewers: 700, favourite:false, id: 2},
+    {name: 'Pirates of the Caribbean', viewers: 650, favourite:true, id: 3},
     
   ];
 
