@@ -1,33 +1,76 @@
 import './App.css'
+import { Component } from 'react'
 import AppInfo from '../app-info/AppInfo'
 import SearchPanel from '../search-panel/SearchPanel'
 import MoviesFilter from '../movies-filter/MoviesFilter'
 import MovieList from '../movie-list/MovieList'
 import MoviesAddForm from '../movies-add-form/MoviesAddForm'
+import { v4 as uuidv4 } from 'uuid';
 
-const App = () => {
+class App extends Component {
 
-  const data = [
-    {name: 'Shawshank Redemption', viewers: 800, favourite:false, id: 1},
-    {name: 'Gladiator', viewers: 700, favourite:false, id: 2},
-    {name: 'Pirates of the Caribbean', viewers: 650, favourite:true, id: 3},
-    
-  ];
+  constructor(props) {
+    super(props)
+    this.state = {
+      data: [
+        {name: 'Shawshank Redemption', viewers: 800, favourite: false, like: false, id: 1},
+        {name: 'Gladiator', viewers: 700, favourite :false, like: false, id: 2},
+        {name: 'Pirates of the Caribbean', viewers: 650, favourite: false, like: false, id: 3},
+        
+      ]
+    }
+  }
 
-  return (
-    <div className='app font-monospace'>
-      <div className='content'>
-        <AppInfo />
-        <div className='search-panel'>
-          <SearchPanel />
-          <MoviesFilter />
+  onDelete = (id) => {
+    this.setState(({data}) => ({
+      data: data.filter(c => c.id != id)
+    }))
+  }
+
+  addData = (item) => {
+    const newItem = {name: item.name, viewers: item.viewers, id: uuidv4(), favourite: false, like: false}
+    this.setState(({data}) => ({
+      data: [...data, newItem]
+    }))
+  }
+
+  onToggleProp = (id, prop) => {
+    this.setState(({data}) => ({
+      data: data.map(item => {
+        if(item.id == id) {
+          return {...item, [prop]: !item[prop]}
+        }
+        return item
+      })
+    }))
+  }
+
+  render() {
+
+    const {data} = this.state
+    const allMoviesCount = data.length
+    const favouriteMoviesCount = data.filter(c => c.favourite).length
+
+    return (
+      <div className='app font-monospace'>
+        <div className='content'>
+          <AppInfo allMoviesCount={allMoviesCount} favouriteMoviesCount={favouriteMoviesCount} />
+          <div className='search-panel'>
+            <SearchPanel />
+            <MoviesFilter />
+          </div>
+          <MovieList 
+            onToggleProp={this.onToggleProp}
+            data={data} 
+            onDelete={this.onDelete} 
+          />
+          <MoviesAddForm addData={this.addData}/>
         </div>
-        <MovieList data={data} />
-        <MoviesAddForm />
-      </div>
-    </div>
-    
-  )
+      </div> 
+    )
+
+  }
+
 }
 
 export default App

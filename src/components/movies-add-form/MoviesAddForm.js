@@ -6,7 +6,7 @@ class MoviesAddForm extends Component {
     super(props) 
       this.state = {
         name: '',
-        views: ''
+        viewers: ''
     }
   }
 
@@ -16,16 +16,26 @@ class MoviesAddForm extends Component {
     })
   }
 
+  addDataHandler = (e) => {
+    e.preventDefault()
+    this.props.addData({name: this.state.name, viewers: this.state.viewers})
+    this.setState({
+      name: '',
+      viewers: ''
+    })
+
+  }
+
   render() {
 
-    const {name, views} = this.state
+    const {name, viewers} = this.state
 
     return (
       <div className="movies-add-form">
           <h3>Yangi kino qo'shish</h3>
-          <form className='add-form d-flex'>
+          <form className='add-form d-flex' onSubmit={this.addDataHandler}>
               <input type='text' className='form-control new-post-label' placeholder='Kino nomi' onChange={this.changeHandlerInput} name='name' value={name}/>
-              <input type='number' className='form-control new-post-label ms-2 me-2' placeholder="Ko'rishlar soni" onChange={this.changeHandlerInput} name='views' value={views}/>
+              <input type='number' className='form-control new-post-label ms-2 me-2' placeholder="Ko'rishlar soni" onChange={this.changeHandlerInput} name='viewers' value={viewers}/>
               <button type='submit' className='btn btn-outline-dark'>Qo'shish</button>
   
           </form>

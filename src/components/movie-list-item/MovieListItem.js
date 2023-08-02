@@ -1,69 +1,26 @@
 import './MovieListItem.css';
-import { Component } from 'react';
 
+const MovieListItem = (props) => {
 
-class MovieListItem extends Component {
+    const { name, viewers, onDelete, onToggleProp, favourite, like } = props;
 
-    constructor(props) {
-        super(props)
-        this.state = { favourite: false, like: false }
-    }
-
-    onFavourite = () => {
-        this.setState(({ favourite }) => ({
-            favourite: !favourite
-        }))
-    }
-
-    onLike = () => {
-        this.setState(({ like }) => ({
-            like: !like
-        }))
-    }
-
-    render() {
-        const { name, viewers } = this.props;
-        const { favourite, like } = this.state;
-
-        return (
-            <div>
-                <li className={`list-group-item d-flex justify-content-between1 ${favourite && 'favourite'} ${like && 'like'}`}>
-                    <span onClick={this.onLike} className="list-group-item-label">{name}</span>
-                    <input type="number" className="list-group-item-input" value={viewers} />
-                    <div className="d-flex justify-content-center align-items-center">
-                        <button type="button" className="btn-cookie btn-sm" onClick={this.onFavourite}>
-                            <i className="fas fa-cookie"></i>
-                        </button>
-                        <button type="button" className="btn-trash btn-sm">
-                            <i className="fas fa-trash"></i>
-                        </button>
-                        <i className="fas fa-star"></i>
-                    </div>
-                </li>
-            </div>
-        )
-    }
-
+    return (
+        <div>
+            <li className={`list-group-item d-flex justify-content-between1 ${favourite && 'favourite'} ${like && 'like'}`}>
+                <span onClick={onToggleProp} className="list-group-item-label" data-toggle='like'>{name}</span>
+                <input type="number" className="list-group-item-input" defaultValue={viewers} />
+                <div className="d-flex justify-content-center align-items-center">
+                    <button type="button" className="btn-cookie btn-sm" onClick={onToggleProp} data-toggle='favourite'>
+                        <i className="fas fa-cookie"></i>
+                    </button>
+                    <button type="button" className="btn-trash btn-sm" onClick={onDelete}>
+                        <i className="fas fa-trash"></i>
+                    </button>
+                    <i className="fas fa-star"></i>
+                </div>
+            </li>
+        </div>
+  )
 }
-
-// const MovieListItem = ({name, viewers, favourite}) => {
-//   return (
-//     <div>
-//         <li className={`list-group-item d-flex justify-content-between1 ${favourite && 'favourite'}`}>
-//             <span className="list-group-item-label">{name}</span>
-//             <input type="number" className="list-group-item-input" defaultValue={800} value={viewers}/>
-//             <div className="d-flex justify-content-center align-items-center">
-//                 <button type="button" className="btn-cookie btn-sm">
-//                     <i className="fas fa-cookie"></i>
-//                 </button>
-//                 <button type="button" className="btn-trash btn-sm">
-//                     <i className="fas fa-trash"></i>
-//                 </button>
-//                 <i className="fas fa-star"></i>
-//             </div>
-//         </li>
-//     </div>
-//   )
-// }
 
 export default MovieListItem
