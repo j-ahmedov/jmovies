@@ -14,16 +14,17 @@ class App extends Component {
     this.state = {
       data: [
         {name: 'Shawshank Redemption', viewers: 800, favourite: false, like: false, id: 1},
-        {name: 'Gladiator', viewers: 700, favourite :false, like: false, id: 2},
-        {name: 'Pirates of the Caribbean', viewers: 650, favourite: false, like: false, id: 3},
-        
-      ]
+        {name: 'Gladiator', viewers: 900, favourite: false, like: false, id: 2},
+        {name: 'Pirates of the Caribbean', viewers: 650, favourite: false, like: false, id: 3}, 
+      ],
+      term: '',
+      filter: ''
     }
   }
 
   onDelete = (id) => {
     this.setState(({data}) => ({
-      data: data.filter(c => c.id != id)
+      data: data.filter(c => c.id !== id)
     }))
   }
 
@@ -37,7 +38,7 @@ class App extends Component {
   onToggleProp = (id, prop) => {
     this.setState(({data}) => ({
       data: data.map(item => {
-        if(item.id == id) {
+        if(item.id === id) {
           return {...item, [prop]: !item[prop]}
         }
         return item
@@ -45,23 +46,47 @@ class App extends Component {
     }))
   }
 
+  searchHandler = (arr, term) => {
+    if (term.length === 0) {
+      return arr
+    }
+    return arr.filter(item => item.name.toLowerCase().indexOf(term) > -1)
+  }
+
+  filterHandler = (arr, filter) => {
+    switch(filter) {
+      case 'popular':
+        return arr.filter(c => c.like)
+      case 'most_viewed':
+        return arr.filter(c => c.viewers > 800)
+      default:
+        return arr
+    }
+  }
+
+  updateTermHandler = (term) => this.setState({term})
+  
+  updateFilterHandler = (filter) => this.setState({filter})
+  
+
   render() {
 
-    const {data} = this.state
+    const {data, term, filter} = this.state
     const allMoviesCount = data.length
     const favouriteMoviesCount = data.filter(c => c.favourite).length
+    const visibleData = this.filterHandler(this.searchHandler(data, term), filter)
 
     return (
       <div className='app font-monospace'>
         <div className='content'>
           <AppInfo allMoviesCount={allMoviesCount} favouriteMoviesCount={favouriteMoviesCount} />
           <div className='search-panel'>
-            <SearchPanel />
-            <MoviesFilter />
+            <SearchPanel updateTermHandler={this.updateTermHandler} />
+            <MoviesFilter filter={filter} updateFilterHandler={this.updateFilterHandler}/>
           </div>
           <MovieList 
             onToggleProp={this.onToggleProp}
-            data={data} 
+            data={visibleData} 
             onDelete={this.onDelete} 
           />
           <MoviesAddForm addData={this.addData}/>
