@@ -1,8 +1,24 @@
+import { useContext } from "react";
 import "./MovieListItem.css";
+import { Context } from "../../context";
 
 const MovieListItem = (props) => {
-  const { name, viewers, onDelete, onToggleProp, favourite, like } = props;
+  const { name, viewers, favourite, like, id } = props;
 
+  const { dispatch } = useContext(Context)
+
+  const onDelete = () => {
+    dispatch({ type: "ON_DELETE", payload: id })
+  }
+
+  const onToggleProp = (e) => {
+    const payload = {
+      id,
+      prop: e.currentTarget.getAttribute('data-toggle')
+    }
+    dispatch({type: "ON_TOGGLE_PROP", payload})
+  }
+  
   return (
     <div>
       <li

@@ -1,103 +1,46 @@
 import "./App.css";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AppInfo from "../app-info/AppInfo";
 import SearchPanel from "../search-panel/SearchPanel";
 import MoviesFilter from "../movies-filter/MoviesFilter";
 import MovieList from "../movie-list/MovieList";
 import MoviesAddForm from "../movies-add-form/MoviesAddForm";
-import { v4 as uuidv4 } from "uuid";
-
-const arr = [
-  {
-    name: "Shawshank Redemption",
-    viewers: 800,
-    favourite: false,
-    like: false,
-    id: 1,
-  },
-  { name: "Gladiator", viewers: 900, favourite: false, like: false, id: 2 },
-  {
-    name: "Pirates of the Caribbean",
-    viewers: 650,
-    favourite: false,
-    like: false,
-    id: 3,
-  },
-];
+import { Context } from "../../context";
 
 const App = () => {
-  const [data, setData] = useState(arr);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [term, setTerm] = useState("");
-  const [filter, setFilter] = useState("");
+  const { dispatch } = useContext(Context);
 
-  const onDelete = (id) => {
-    setData(data.filter((c) => c.id !== id));
-  };
-
-  const addData = (item) => {
-    const newItem = {
-      name: item.name,
-      viewers: item.viewers,
-      id: uuidv4(),
-      favourite: false,
-      like: false,
-    };
-    setData([...data, newItem]);
-  };
-
-  const onToggleProp = (id, prop) => {
-    const newData = data.map((item) => {
-      if (item.id === id) {
-        return { ...item, [prop]: !item[prop] };
-      }
-      return item;
-    });
-
-    setData(newData);
-  };
-
-  const searchHandler = (arr, term) => {
-    if (term.length === 0) {
-      return arr;
-    }
-    return arr.filter((item) => item.name.toLowerCase().indexOf(term) > -1);
-  };
-
-  const filterHandler = (arr, filter) => {
-    switch (filter) {
-      case "popular":
-        return arr.filter((c) => c.like);
-      case "most_viewed":
-        return arr.filter((c) => c.viewers > 800);
-      default:
-        return arr;
-    }
-  };
-
-  const updateTermHandler = (term) => setTerm(term);
-  const updateFilterHandler = (filter) => setFilter(filter);
+  useEffect(() => {
+    setIsLoading(true);
+    fetch("https://jsonplaceholder.typicode.com/todos?_start=0&_limit=5")
+      .then((response) => response.json())
+      .then((json) => {
+        const newArr = json.map((item) => ({
+          name: item.title,
+          id: item.id,
+          viewers: item.id * 10,
+          favourite: false,
+          like: false,
+        }));
+        dispatch({ type: "GET_DATA", payload: newArr });
+      })
+      .catch((error) => console.log(error))
+      .finally(() => setIsLoading(false));
+  }, [dispatch]);
 
   return (
     <div className="app font-monospace">
       <div className="content">
-        <AppInfo
-          allMoviesCount={data.length}
-          favouriteMoviesCount={data.filter((c) => c.favourite).length}
-        />
+        <AppInfo />
         <div className="search-panel">
-          <SearchPanel updateTermHandler={updateTermHandler} />
-          <MoviesFilter
-            filter={filter}
-            updateFilterHandler={updateFilterHandler}
-          />
+          <SearchPanel />
+          <MoviesFilter />
         </div>
-        <MovieList
-          onToggleProp={onToggleProp}
-          data={filterHandler(searchHandler(data, term), filter)}
-          onDelete={onDelete}
-        />
-        <MoviesAddForm addData={addData} />
+        {isLoading && "Loading..."}
+        <MovieList />
+        <MoviesAddForm />
       </div>
     </div>
   );
