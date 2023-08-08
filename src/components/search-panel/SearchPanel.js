@@ -1,24 +1,24 @@
-import { useState } from 'react';
-import './SearchPanel.css';
+import { useState } from "react";
+import "./SearchPanel.css";
 
 const SearchPanel = (props) => {
-  const [term, setTerm] = useState('')
-  
+  const [term, setTerm] = useState("");
+
   const updateTermHandler = (e) => {
-    const term = e.target.value.toLowerCase()
-    setTerm(term)
-    props.updateTermHandler(term)
-  }
+    const term = e.target.value.toLowerCase();
+    setTerm(term);
+    props.updateTermHandler(term);
+  };
 
   return (
-    <input 
-      type="text" 
-      className="form-control search-input" 
-      placeholder="Kino qidirish" 
+    <input
+      type="text"
+      className="form-control search-input"
+      placeholder="Kino qidirish"
       onChange={updateTermHandler}
-      value={term}  
+      value={term}
     />
-  )
-}
+  );
+};
 
-export default SearchPanel
+export default SearchPanel;
